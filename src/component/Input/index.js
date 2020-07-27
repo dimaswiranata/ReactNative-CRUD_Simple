@@ -2,7 +2,7 @@ import React from 'react'
 import { Input } from 'react-native-elements';
 import { StyleSheet, Text, View } from 'react-native'
 
-const index = ({Title, onChangeText, value, placeholder}) => {
+const index = ({Title, onChangeText, value, placeholder, inputComponent}) => {
   return (
     <View>
       <Input
@@ -10,6 +10,7 @@ const index = ({Title, onChangeText, value, placeholder}) => {
         placeholder={placeholder}
         onChangeText={onChangeText}
         value={value}
+        inputComponent={inputComponent}
       />
     </View>
   )
