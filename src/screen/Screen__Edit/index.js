@@ -3,6 +3,8 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Header, Input } from "../../component";
 import { Button } from 'react-native-elements';
 import ACTIONS from "../../core/actions";
+import { useDispatch } from "react-redux";
+import { showError } from "../../utils/showMessage";
 
 const index = ({navigation, route}) => {
   const dataContact = route.params;
@@ -11,6 +13,8 @@ const index = ({navigation, route}) => {
   const [lastName, setLastName] = useState(dataContact.lastName);
   const [age, setAge] = useState(dataContact.age);
   const [photo, setPhoto] = useState(dataContact.photo);
+
+  const dispatch = useDispatch();
 
   const UpdateData = async () => {
     let payload = {
@@ -26,13 +30,16 @@ const index = ({navigation, route}) => {
       id: id,
       payload: payload
     }
-
+    dispatch({type: 'SET_LOADING', value: true});
     ACTIONS.contact.updateContactData(data)
       .then(res => {
         console.log('Update Berhasil');
+        dispatch({type: 'SET_LOADING', value: false});
         navigation.navigate('Home')
       })
       .catch(err => {
+        dispatch({type: 'SET_LOADING', value: false});
+        showError(err.message);
         console.log('error: ', err.message);
       })
   }

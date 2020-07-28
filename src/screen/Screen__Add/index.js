@@ -3,13 +3,17 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Header, Input } from "../../component";
 import { Button } from 'react-native-elements';
 import ACTIONS from "../../core/actions";
+import { useDispatch } from "react-redux";
+import { showError } from "../../utils/showMessage";
 
 const index = ({navigation}) => {
 
-  const [firstName, setFirstName] = useState('firstName');
-  const [lastName, setLastName] = useState('lastName');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [age, setAge] = useState(0);
   const [photo, setPhoto] = useState('http://vignette1.wikia.nocookie.net/lotr/images/6/68/Bilbo_baggins.jpg/revision/latest?cb=20130202022550');
+
+  const dispatch = useDispatch();
 
   const CreateData = async () => {
     let payload = {
@@ -18,13 +22,16 @@ const index = ({navigation}) => {
       age: age,
       photo: photo
     }
-
+    dispatch({type: 'SET_LOADING', value: true});
     ACTIONS.contact.saveContactData(payload)
       .then(res => {
         console.log('Create Contact Berhasil');
+        dispatch({type: 'SET_LOADING', value: false});
         navigation.navigate('Home')
       })
       .catch(err => {
+        dispatch({type: 'SET_LOADING', value: false});
+        showError(err.message);
         console.log('error: ', err.message);
       })
   }
