@@ -62,7 +62,6 @@ const index = ({navigation}) => {
         lastName={item.lastName} 
         age={item.age}
         photo={item.photo === 'N/A' ? 'https://www.pngitem.com/pimgs/m/79-791921_male-profile-round-circle-users-profile-round-icon.png' : item.photo} 
-        deleteHandler={(event) =>deleteContactHandler(item.id)}
       />
     )
   }

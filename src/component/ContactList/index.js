@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const index = ({onPress, firstName, lastName, age, photo, deleteHandler}) => {
+const index = ({onPress, firstName, lastName, age, photo}) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.Contact}>
@@ -13,15 +13,7 @@ const index = ({onPress, firstName, lastName, age, photo, deleteHandler}) => {
             <Text>{age} Years Old</Text>
           </View>
         </View>
-        <View style={styles.Contact__Right}>
-          <TouchableOpacity onPress={deleteHandler}>
-            <Icon
-              name='trash'
-              size={30}
-              color='#000'
-            />
-          </TouchableOpacity>
-        </View>
+        <View style={styles.Contact__Right}/>
       </View>
     </TouchableOpacity>
   )
