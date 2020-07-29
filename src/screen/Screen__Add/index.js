@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { Header, Input } from "../../component";
 import { Button } from 'react-native-elements';
 import ACTIONS from "../../core/actions";
@@ -14,7 +14,7 @@ const index = ({navigation}) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [age, setAge] = useState('');
-  const [photoForDB, setPhotoForDB] = useState('')
+  const [photoForDB, setPhotoForDB] = useState('N/A');
   const [hasPhoto, setHasPhoto] = useState(false);
   const [photo, setPhoto] = useState(NullPhoto);
 
@@ -63,51 +63,53 @@ const index = ({navigation}) => {
 
       {/* content */}
       <View style={styles.Add}>
-        <View style={styles.profile}>
-          <TouchableOpacity style={styles.avatarWrapper} onPress={getImage}> 
-            <Image source={photo} style={styles.avatar}/>
-            {
-              !hasPhoto ? (
-                <View style={styles.addPhoto}>
-                  <Icon
-                    name='add-circle'
-                    size={30}
-                    color='#000'
-                  />
-                </View>
-              ) : (
-                <View style={styles.addPhoto}>
-                  <Icon
-                    name='md-remove-circle'
-                    size={30}
-                    color='#000'
-                  />
-                </View>
-              )
-            }
-          </TouchableOpacity>
-        </View>
-        <View style={styles.Add__Form}>
-          <Input 
-            Title='First Name' 
-            value={firstName} 
-            placeholder={firstName}
-            onChangeText={(event) => setFirstName(event)}
-          />
-          <Input 
-            Title='Last Name' 
-            value={lastName} 
-            placeholder={lastName}
-            onChangeText={(event) => setLastName(event)}
-          />
-          <Input 
-            Title='Age' 
-            placeholder={age}
-            value={age}
-            onChangeText={(event) => setAge(event)}
-            inputComponent="number"
-          />
-        </View>
+        <ScrollView showsVerticalScrollIndicator={false} >
+          <View style={styles.profile}>
+            <TouchableOpacity style={styles.avatarWrapper} onPress={getImage}> 
+              <Image source={photo} style={styles.avatar}/>
+              {
+                !hasPhoto ? (
+                  <View style={styles.addPhoto}>
+                    <Icon
+                      name='add-circle'
+                      size={30}
+                      color='#000'
+                    />
+                  </View>
+                ) : (
+                  <View style={styles.addPhoto}>
+                    <Icon
+                      name='md-remove-circle'
+                      size={30}
+                      color='#000'
+                    />
+                  </View>
+                )
+              }
+            </TouchableOpacity>
+          </View>
+          <View style={styles.Add__Form}>
+            <Input 
+              Title='First Name' 
+              value={firstName} 
+              placeholder={firstName}
+              onChangeText={(event) => setFirstName(event)}
+            />
+            <Input 
+              Title='Last Name' 
+              value={lastName} 
+              placeholder={lastName}
+              onChangeText={(event) => setLastName(event)}
+            />
+            <Input 
+              Title='Age' 
+              placeholder={age}
+              value={age}
+              onChangeText={(event) => setAge(event)}
+              errorMessage={age.length > 2 ? 'Age length just 2 integer' : null}
+            />
+          </View>
+        </ScrollView>
       </View>
       <View style={styles.Add__Button__Container}>
         <Button 
@@ -124,7 +126,8 @@ export default index;
 
 const styles = StyleSheet.create({
   Add: {
-    flex: 1
+    flex: 1,
+    backgroundColor: 'white'
   },
   Add__Form: {
     padding: 20
@@ -134,7 +137,8 @@ const styles = StyleSheet.create({
   },
   Add__Button: {
     height: 50,
-    borderRadius: 20
+    borderRadius: 20,
+    backgroundColor: '#0BCAD4'
   },
   avatar: {
     width: 110,

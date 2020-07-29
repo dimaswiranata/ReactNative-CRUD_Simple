@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { StyleSheet, Text, View, Image } from 'react-native';
-import { Contact } from '../../assets';
+import { Contact, ContactNew } from '../../assets';
 
 const index = ({navigation}) => {
 
@@ -13,9 +13,9 @@ const index = ({navigation}) => {
   }, []);
 
   return (
-    <View style={styles.page}>
-      <Image source={Contact}/>
-      <Text style={styles.title}>
+    <View style={styles.Splash}>
+      <Image source={ContactNew} style={styles.Splash__Logo}/>
+      <Text style={styles.Splash__Title}>
         Your Contact
       </Text>
     </View>
@@ -25,16 +25,20 @@ const index = ({navigation}) => {
 export default index;
 
 const styles = StyleSheet.create({
-  page: {
+  Splash: {
     flex: 1, 
     alignItems: 'center', 
     justifyContent: 'center',
-    backgroundColor: '#fff'
+    backgroundColor: '#0BCAD4'
   },
-  title: {
-    fontSize: 20,
+  Splash__Logo: {
+    width: 200,
+    height: 200
+  },
+  Splash__Title: {
+    fontSize: 32,
     fontFamily: 'bold',
-    color: '#0BCAD4',
+    color: '#fff',
     marginTop: 20
   }
 });

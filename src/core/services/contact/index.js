@@ -12,7 +12,7 @@ const saveContactData = ( payload ) => {
   return SERVER.post(`/contact`, payload);
 }
 
-const deleteContactData = ({id}) => {
+const deleteContactData = (id) => {
   return SERVER.delete(`/contact/${id}`);
 }
 

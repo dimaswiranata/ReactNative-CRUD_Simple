@@ -13,13 +13,15 @@ const index = ({Back, Title, Add, onPress}) => {
     <View style={styles.Header}>
       <View style={styles.Header__Left}>
         { Back && 
-          <TouchableOpacity onPress={NavBack}>
-            <Icon
-              name='arrow-back'
-              size={30}
-              color='#fff'
-            />
-          </TouchableOpacity>
+          <View style={styles.Header__ArrowBack}>
+            <TouchableOpacity onPress={NavBack}>
+              <Icon
+                name='arrow-back'
+                size={30}
+                color='#fff'
+              />
+            </TouchableOpacity>
+          </View>
         }
         <View style={styles.Header__Title__Container}>
           <Text  style={styles.Header__Title}>
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
   Header: {
     height: 60,
     width: '100%',
-    backgroundColor: '#3D6DCC',
+    backgroundColor: 'white',
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
@@ -57,13 +59,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 15
   },
+  Header__ArrowBack: {
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    borderRadius: 100,
+    padding: 5
+  },
   Header__Title__Container : {
-    paddingLeft: 16
+    paddingLeft: 16,
+    justifyContent: 'center'
   },
   Header__Title: {
     fontSize: 20,
     fontWeight: "800",
-    color: '#fff'
+    color: '#000'
   },
   Header__Right: {
     marginRight: 15

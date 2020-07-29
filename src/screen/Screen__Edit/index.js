@@ -4,10 +4,8 @@ import {
   View, 
   TouchableOpacity, 
   Image,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Platform,
-  Keyboard  
+  Keyboard ,
+  ScrollView
 } from 'react-native'
 import { Header, Input } from "../../component";
 import { Button } from 'react-native-elements';
@@ -16,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { showError } from "../../utils/showMessage";
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-picker';
+import { NullPhoto } from '../../assets';
 
 const index = ({navigation, route}) => {
   const dataContact = route.params;
@@ -25,7 +24,7 @@ const index = ({navigation, route}) => {
   const [age, setAge] = useState(String(dataContact.age));
   const [photoForDB, setPhotoForDB] = useState(dataContact.photo);
   const [hasPhoto, setHasPhoto] = useState(false);
-  const [photo, setPhoto] = useState({uri : dataContact.photo});
+  const [photo, setPhoto] = useState(dataContact.photo === 'N/A'? NullPhoto : {uri : dataContact.photo});
 
   const dispatch = useDispatch();
 
@@ -59,10 +58,12 @@ const index = ({navigation, route}) => {
 
   const DeleteData = async () => {
 
-    let id = dataContact.id;
+    let data = {
+      id: dataContact.id
+    };
 
     dispatch({type: 'SET_LOADING', value: true});
-    ACTIONS.contact.deleteContactData(id)
+    ACTIONS.contact.deleteContactData(data)
       .then(res => {
         console.log('Delete Berhasil');
         dispatch({type: 'SET_LOADING', value: false});
@@ -70,7 +71,7 @@ const index = ({navigation, route}) => {
       })
       .catch(err => {
         dispatch({type: 'SET_LOADING', value: false});
-        showError(err.message);
+        showError('Delete failed by System');
         console.log('error: ', err.message);
       })
   }
@@ -93,69 +94,72 @@ const index = ({navigation, route}) => {
   return (
     <>
       {/* header */}
-      <Header Title="Update Contact" Back />
+      <Header Title={`${dataContact.firstName} ${dataContact.lastName}`} Back />
 
       {/* content */}
-      <KeyboardAvoidingView style={styles.Edit}>
-        <View style={styles.profile}>
-          <TouchableOpacity style={styles.avatarWrapper} onPress={getImage}> 
-            <Image source={photo} style={styles.avatar}/>
-            {
-              !hasPhoto ? (
-                <View style={styles.addPhoto}>
-                  <Icon
-                    name='add-circle'
-                    size={30}
-                    color='#000'
-                  />
-                </View>
-              ) : (
-                <View style={styles.addPhoto}>
-                  <Icon
-                    name='md-remove-circle'
-                    size={30}
-                    color='#000'
-                  />
-                </View>
-              )
-            }
-          </TouchableOpacity>
-        </View>
-        <View style={styles.Edit__Form}>
-          <TouchableOpacity onPress={Keyboard.dismiss}>
-            <Input 
-              Title='First Name' 
-              value={firstName} 
-              placeholder={firstName}
-              onChangeText={(event) => setFirstName(event)}
-            />
-            <Input 
-              Title='Last Name' 
-              value={lastName} 
-              placeholder={lastName}
-              onChangeText={(event) => setLastName(event)}
-            />
-            <Input 
-              Title='Age' 
-              placeholder={age}
-              value={age}
-              onChangeText={(event) => setAge(event)}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.Edit__Button__Container}>
-          <Button 
-            title='Update Contact'
-            buttonStyle={styles.Edit__Button}
-            onPress={UpdateData}
-          />
-          <Button 
-            title='Delete Contact'
-            buttonStyle={styles.Delete__Button}
-            onPress={DeleteData}
-          />
-        </View>
-      </KeyboardAvoidingView>
+      <View style={styles.Edit}>
+        <ScrollView showsVerticalScrollIndicator={false} >
+          <View style={styles.profile}>
+            <TouchableOpacity style={styles.avatarWrapper} onPress={getImage}> 
+              <Image source={photo} style={styles.avatar}/>
+              {
+                !hasPhoto ? (
+                  <View style={styles.addPhoto}>
+                    <Icon
+                      name='add-circle'
+                      size={30}
+                      color='#000'
+                    />
+                  </View>
+                ) : (
+                  <View style={styles.addPhoto}>
+                    <Icon
+                      name='md-remove-circle'
+                      size={30}
+                      color='#000'
+                    />
+                  </View>
+                )
+              }
+            </TouchableOpacity>
+          </View>
+          <View style={styles.Edit__Form}>
+            <TouchableOpacity onPress={Keyboard.dismiss}>
+              <Input 
+                Title='First Name' 
+                value={firstName} 
+                placeholder={firstName}
+                onChangeText={(event) => setFirstName(event)}
+              />
+              <Input 
+                Title='Last Name' 
+                value={lastName} 
+                placeholder={lastName}
+                onChangeText={(event) => setLastName(event)}
+              />
+              <Input 
+                Title='Age' 
+                placeholder={age}
+                value={age}
+                onChangeText={(event) => setAge(event)}
+                errorMessage={age.length > 2 ? 'Age length just 2 integer' : null}
+              />
+            </TouchableOpacity>    
+          </View>
+        </ScrollView>
+      </View>
+      <View style={styles.Edit__Button__Container}>
+        <Button 
+          title='Update Contact'
+          buttonStyle={styles.Edit__Button}
+          onPress={UpdateData}
+        />
+        <Button 
+          title='Delete Contact'
+          buttonStyle={styles.Delete__Button}
+          onPress={DeleteData}
+        />
+      </View>
     </>
   )
 }
@@ -164,7 +168,8 @@ export default index
 
 const styles = StyleSheet.create({
   Edit: {
-    flex: 1
+    flex: 1,
+    backgroundColor: 'white'
   },
   Edit__Form: {
     padding: 20
@@ -174,7 +179,8 @@ const styles = StyleSheet.create({
   },
   Edit__Button: {
     height: 50,
-    borderRadius: 20
+    borderRadius: 20,
+    backgroundColor: '#0BCAD4'
   },
   avatar: {
     width: 110,

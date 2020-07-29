@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, FlatList } from 'react-native'
-import { Header, ContactList } from "../../component";
+import { Header, ContactList, List } from "../../component";
 import ACTIONS from "../../core/actions";
 import { useDispatch } from "react-redux";
 import { showError } from "../../utils/showMessage";
+import ActionButton from 'react-native-action-button';
 
 const index = ({navigation}) => {
   const [contactData, setContactData] = useState([]);
@@ -66,21 +67,37 @@ const index = ({navigation}) => {
     )
   }
 
+  const renderContactColumnList = ({item}) => {
+    return (
+      <List 
+        onPress={() => navigation.navigate('Edit', item)} 
+        firstName={item.firstName} 
+        lastName={item.lastName} 
+        age={item.age}
+        photo={item.photo === 'N/A' ? 'https://www.pngitem.com/pimgs/m/79-791921_male-profile-round-circle-users-profile-round-icon.png' : item.photo} 
+      />
+    )
+  }
+
   return (
     <>
       {/* header */}
-      <Header Title="Home" Add onPress={() => navigation.navigate('Add')}/>
+      <Header Title="All Contact"/>
 
       {/* content */}
-      <View>
-        <Text style={styles.Home__Title}>All Contact</Text>
+      <View style={styles.Home}>
         <FlatList
           data={contactData}
-          renderItem={(item) => renderContactList(item)}
+          numColumns={2}
+          columnWrapperStyle={styles.Home__Row}
+          renderItem={(item) => renderContactColumnList(item)}
           keyExtractor={(item) => item.id}
         />
       </View>
-
+      <ActionButton
+        buttonColor="#0BCAD4"
+        onPress={() => {navigation.navigate('Add')}}
+      />
     </>
   )
 }
@@ -88,7 +105,15 @@ const index = ({navigation}) => {
 export default index
 
 const styles = StyleSheet.create({
+  Home:{
+    backgroundColor: 'white',
+    flex: 1
+  },
   Home__Title: {
     margin: 15
+  },
+  Home__Row: {
+    flex: 1,
+    justifyContent: "space-around"
   }
 })
