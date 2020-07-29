@@ -15,6 +15,7 @@ import { showError } from "../../utils/showMessage";
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-picker';
 import { NullPhoto } from '../../assets';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 const index = ({navigation, route}) => {
   const dataContact = route.params;
@@ -25,10 +26,15 @@ const index = ({navigation, route}) => {
   const [photoForDB, setPhotoForDB] = useState(dataContact.photo);
   const [hasPhoto, setHasPhoto] = useState(false);
   const [photo, setPhoto] = useState(dataContact.photo === 'N/A'? NullPhoto : {uri : dataContact.photo});
+  const [deleteAlert, setDeleteAlert] = useState(false);
+  const [updateAlert, setUpdateAlert] = useState(false);
 
   const dispatch = useDispatch();
 
   const UpdateData = async () => {
+
+    hideUpdateAlert();
+
     let payload = {
       firstName: firstName,
       lastName: lastName,
@@ -42,6 +48,7 @@ const index = ({navigation, route}) => {
       id: id,
       payload: payload
     }
+
     dispatch({type: 'SET_LOADING', value: true});
     ACTIONS.contact.updateContactData(data)
       .then(res => {
@@ -57,6 +64,8 @@ const index = ({navigation, route}) => {
   }
 
   const DeleteData = async () => {
+
+    hideDeleteAlert();
 
     let data = {
       id: dataContact.id
@@ -89,6 +98,22 @@ const index = ({navigation, route}) => {
         setHasPhoto(true);
       }
     });
+  }
+
+  const showDeleteAlert = () => {
+    setDeleteAlert(true);
+  }
+
+  const hideDeleteAlert = () => {
+    setDeleteAlert(false);
+  }
+
+  const showUpdateAlert = () => {
+    setUpdateAlert(true);
+  }
+
+  const hideUpdateAlert = () => {
+    setUpdateAlert(false);
   }
 
   return (
@@ -152,14 +177,52 @@ const index = ({navigation, route}) => {
         <Button 
           title='Update Contact'
           buttonStyle={styles.Edit__Button}
-          onPress={UpdateData}
+          onPress={showUpdateAlert}
         />
         <Button 
           title='Delete Contact'
           buttonStyle={styles.Delete__Button}
-          onPress={DeleteData}
+          onPress={showDeleteAlert}
         />
       </View>
+      <AwesomeAlert
+        show={deleteAlert}
+        showProgress={false}
+        title="Alert!"
+        message="Are you sure to delete it?"
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="No, cancel"
+        confirmText="Yes, delete it"
+        confirmButtonColor="#DD6B55"
+        onCancelPressed={() => {
+          hideDeleteAlert();
+        }}
+        onConfirmPressed={() => {
+          DeleteData();
+        }}
+      />
+      <AwesomeAlert
+        show={updateAlert}
+        showProgress={false}
+        title="Alert!"
+        message="Are you sure to change it?"
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="No, cancel"
+        confirmText="Yes, change it"
+        confirmButtonColor="#DD6B55"
+        onCancelPressed={() => {
+          hideUpdateAlert();
+        }}
+        onConfirmPressed={() => {
+          UpdateData();
+        }}
+      />
     </>
   )
 }
@@ -175,7 +238,8 @@ const styles = StyleSheet.create({
     padding: 20
   },
   Edit__Button__Container: {
-    padding: 20
+    padding: 20,
+    backgroundColor: 'white'
   },
   Edit__Button: {
     height: 50,

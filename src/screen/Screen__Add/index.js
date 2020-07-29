@@ -8,6 +8,7 @@ import { showError } from "../../utils/showMessage";
 import { NullPhoto } from "../../assets";
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-picker';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 const index = ({navigation}) => {
 
@@ -17,10 +18,14 @@ const index = ({navigation}) => {
   const [photoForDB, setPhotoForDB] = useState('N/A');
   const [hasPhoto, setHasPhoto] = useState(false);
   const [photo, setPhoto] = useState(NullPhoto);
+  const [showAlert, setShowAlert] = useState(false);
 
   const dispatch = useDispatch();
 
   const CreateData = async () => {
+
+    hideAwesomeAlert();
+
     let payload = {
       firstName: firstName,
       lastName: lastName,
@@ -54,6 +59,14 @@ const index = ({navigation}) => {
         setHasPhoto(true);
       }
     });
+  }
+
+  const showAwesomeAlert = () => {
+    setShowAlert(true);
+  }
+
+  const hideAwesomeAlert = () => {
+    setShowAlert(false);
   }
   
   return (
@@ -115,9 +128,28 @@ const index = ({navigation}) => {
         <Button 
           title='Create Contact'
           buttonStyle={styles.Add__Button}
-          onPress={CreateData}
+          onPress={showAwesomeAlert}
         />
       </View>
+      <AwesomeAlert
+        show={showAlert}
+        showProgress={false}
+        title="Alert!"
+        message="Are you sure to create it?"
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="No, cancel"
+        confirmText="Yes, create it"
+        confirmButtonColor="#0BCAD4"
+        onCancelPressed={() => {
+          hideAwesomeAlert();
+        }}
+        onConfirmPressed={() => {
+          CreateData();
+        }}
+      />
     </>
   )
 }
@@ -133,7 +165,8 @@ const styles = StyleSheet.create({
     padding: 20
   },
   Add__Button__Container: {
-    padding: 20
+    padding: 20,
+    backgroundColor: 'white'
   },
   Add__Button: {
     height: 50,
